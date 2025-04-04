@@ -2,6 +2,9 @@ from flask import Flask, render_template, request, session, redirect, jsonify, u
 import Authentication
 import os
 from dotenv import load_dotenv
+import hashlib
+
+
 load_dotenv()
 db = Authentication.Auth()
 
