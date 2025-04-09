@@ -3,170 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AnarchKey – The Last API Key Manager You'll Ever Need</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <style>
-        body {
-            background-color: #121212;
-            color: #ffffff;
-            font-family: Arial, sans-serif;
-        }
-        .navbar {
-            background: #181818;
-            padding: 15px;
-            box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
-        }
-        .navbar-brand {
-            font-weight: bold;
-            color: #ff4b2b !important;
-        }
-        .nav-link {
-            color: white !important;
-        }
-        .hero {
-            text-align: center;
-            padding: 80px 20px;
-            background: linear-gradient(135deg, #ff416c, #ff4b2b);
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(255, 75, 43, 0.2);
-        }
-        .hero h1 {
-            font-size: 3rem;
-            font-weight: bold;
-        }
-        .hero p {
-            font-size: 1.2rem;
-            opacity: 0.9;
-        }
-        .feature-card {
-            background: #1e1e1e;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
-            transition: transform 0.2s;
-        }
-        .feature-card:hover {
-            transform: scale(1.05);
-        }
-        .cta-section {
-            text-align: center;
-            padding: 50px 20px;
-            background: #ff4b2b;
-            border-radius: 10px;
-            margin-top: 40px;
-        }
-        .cta-section h2 {
-            font-size: 2.5rem;
-        }
-        .cta-section p {
-            font-size: 1.2rem;
-        }
-        .footer {
-            text-align: center;
-            padding: 20px;
-            margin-top: 40px;
-            font-size: 0.9rem;
-            opacity: 0.7;
-        }
-    </style>
-</head>
-<body>
+    <title>AnarchKey</title>
+    <link rel="icon" href="/static/logo.png" type="image/x-icon" style="width: 10px; height: 10px;">
 
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg">
+    <link rel="stylesheet" href="../static/index.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="dark">
+    <nav class="navbar">
         <div class="container">
-            <a class="navbar-brand" href="#">🔑 AnarchKey</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon text-white">☰</span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#features">Features</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/docs">Docs</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/contact">Contact</a></li>
-                </ul>
-                <div class="d-flex">
-                    <a href="/login" class="btn btn-outline-light me-2">Login</a>
-                    <a href="/signup" class="btn btn-light">Sign Up</a>
+            <div class="nav-content">
+                <div class="logo">
+                    <img src="../static/logo.png" alt="AnarchKey Logo" class="logo-img">
+                    <span>AnarchKey</span>
+                </div>
+                <div class="nav-actions">
+                    <button id="themeToggle" class="theme-toggle">
+                        <i data-lucide="sun" class="sun-icon"></i>
+                        <i data-lucide="moon" class="moon-icon"></i>
+                    </button>
+                    <button onclick="window.location.href='/learn_more'" class="primary-btn" >Login | Register</button>
                 </div>
             </div>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <div class="container">
-        <div class="hero mt-5">
-            <h1>🔑 AnarchKey</h1>
-            <p>The API Key Manager That **Doesn’t Suck.**</p>
-            <a href="/learn_more" class="btn btn-light btn-lg mt-3">Learn More</a>
-        </div>
-    </div>
-
-    <!-- Features Section -->
-    <div class="container mt-5">
-        <h2 class="text-center mb-4">Why AnarchKey?</h2>
-        <div class="row">
-            <div class="col-md-4">
-                <div class="feature-card text-center p-4">
-                    <h4>🔒 End-to-End Encryption</h4>
-                    <p>We encrypt everything. If someone gets your API keys, it's because you **personally handed them over.**</p>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="feature-card text-center p-4">
-                    <h4>⚡ No More Hardcoding</h4>
-                    <p>If you’re still storing keys in your code, I have bad news: **you're the security risk.** Fix it.</p>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="feature-card text-center p-4">
-                    <h4>📊 Track & Rotate Keys</h4>
-                    <p>Stop guessing if your API keys are being used. Track usage, **automate rotation**, and **sleep at night.**</p>
-                </div>
+    <section class="hero">
+        <div class="container">
+            <h1>The Last API Key Manager<br>You'll Ever Need</h1>
+            <p class="hero-text">
+                Stop compromising on security. AnarchKey provides military-grade encryption
+                for your API keys with zero compromise on usability.
+            </p>
+            <div class="hero-actions">
+                <button class="primary-btn">Start Free Trial</button>
+                <button class="secondary-btn">View Demo</button>
             </div>
         </div>
+    </section>
 
-        <div class="row mt-4">
-            <div class="col-md-4">
-                <div class="feature-card text-center p-4">
-                    <h4>🌎 Decentralized Control</h4>
-                    <p>Your keys, **your rules.** No third-party nonsense. **No lock-in.** Just security.</p>
+    <section class="features">
+        <div class="container">
+            <div class="features-grid">
+                <div class="feature-card">
+                    <i data-lucide="shield" class="feature-icon"></i>
+                    <h3>End-to-End Encryption</h3>
+                    <p>We encrypt everything. If someone gets your API keys, it's because you personally handed them over.</p>
                 </div>
-            </div>
-            <div class="col-md-4">
-                <div class="feature-card text-center p-4">
-                    <h4>🚀 Blazing Fast API</h4>
-                    <p>Retrieve and manage keys **faster than you can say ‘data breach’.**</p>
+                <div class="feature-card">
+                    <i data-lucide="alert-triangle" class="feature-icon"></i>
+                    <h3>No More Hardcoding</h3>
+                    <p>If you're still storing keys in your code, I have bad news: you're the security risk. Fix it.</p>
                 </div>
-            </div>
-            <div class="col-md-4">
-                <div class="feature-card text-center p-4">
-                    <h4>🛡️ Prevent Leaks</h4>
-                    <p>Tired of leaking keys? **So is the internet.** Use AnarchKey. **Problem solved.**</p>
+                <div class="feature-card">
+                    <i data-lucide="zap" class="feature-icon"></i>
+                    <h3>Track & Rotate Keys</h3>
+                    <p>Stop guessing if your API keys are being used. Track usage, automate rotation, and sleep at night.</p>
+                </div>
+                <div class="feature-card">
+                    <i data-lucide="globe" class="feature-icon"></i>
+                    <h3>Decentralized Control</h3>
+                    <p>Your keys, your rules. No third-party nonsense. No lock-in. Just security.</p>
+                </div>
+                <div class="feature-card">
+                    <i data-lucide="rocket" class="feature-icon"></i>
+                    <h3>Blazing Fast API</h3>
+                    <p>Retrieve and manage keys faster than you can say 'data breach'.</p>
+                </div>
+                <div class="feature-card">
+                    <i data-lucide="shield" class="feature-icon"></i>
+                    <h3>Prevent Leaks</h3>
+                    <p>Tired of leaking keys? So is the internet. Use AnarchKey. Problem solved.</p>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 
-    <!-- CTA Section -->
-    <div class="container">
-        <div class="cta-section">
-            <h2>Stop Leaking API Keys. Start Using AnarchKey.</h2>
-            <p>Ready to secure your API keys? **Or do you like living on the edge?**</p>
-            <a href="/docs" class="btn btn-dark btn-lg">View Documentation</a>
+    <section class="cta">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Ready to Secure Your API Keys?</h2>
+                <p>Join thousands of developers who trust AnarchKey with their secrets.</p>
+                <button onclick="window.location.href='/learn_more'" class="cta-btn">Get Started Now</button>
+            </div>
         </div>
-    </div>
+    </section>
 
-    <!-- Footer -->
-<!-- Footer -->
-<div class="footer">
-    <p>&copy; 2025 AnarchKey | All Rights Reserved | No API keys were harmed in the making of this product.</p>
-    <p>Powered by <a href="https://protobase.pythonanywhere.com" target="_blank" style="color: #ff4b2b; text-decoration: none;">ProtoBase</a> – because reinventing authentication is for people with too much free time.</p>
-</div>
+    <footer>
+        <div class="container">
+            <p>© 2025 AnarchKey | All Rights Reserved | No API keys were harmed in the making of this product</p>
+            <br>
+            <p>Powered by <a href="https://protobase.pythonanywhere.com" target="_blank" style="color: #ff4b2b; text-decoration: none;">ProtoBase</a> – because reinventing authentication is for people with too much free time.</p>
 
+        </div>
+    </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
+    <script src="../static/index.js"></script>
 </body>
 </html>
