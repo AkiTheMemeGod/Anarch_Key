@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AnarchKey - Login | Register</title>
+    <link rel="icon" href="/static/logo.png" type="image/x-icon">
+    <link rel="stylesheet" href="../static/index.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        backdrop-filter: blur(12px);
+        background: rgba(255, 255, 255, 0.8);
+        transition: var(--transition);
+    }
+
+    body.dark .navbar {
+        background: rgba(24, 24, 27, 0.8);
+    }
+
+    .nav-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 4rem;
+        width: 100%;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1.5rem;
+        width: 100%;
+    }
+
+        /* Additional styles for login/register page */
+
+        .form-container {
+            background: var(--card-light);
+            border-radius: 1rem;
+            padding: 3rem;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body.dark .form-container {
+            background: var(--card-dark);
+            backdrop-filter: blur(12px);
+        }
+
+        .form-container h2 {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            font-weight: 700;
+            background: var(--gradient-dark);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .form-container input {
+            width: 100%;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border-radius: 0.5rem;
+            border: 2px solid transparent;
+            background: rgba(239,68,68,0.05);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        body.dark .form-container input {
+            background: rgba(24, 24, 27, 0.5);
+            color: white;
+        }
+
+        .form-container input:focus {
+            outline: none;
+            border-color: var(--primary-red);
+            box-shadow: 0 0 0 2px rgba(239,68,68,0.1);
+        }
+
+        .form-container a {
+            color: var(--primary-red);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .form-container a:hover {
+            opacity: 0.8;
+        }
+
+        .form-container p {
+            margin: 1.5rem 0 0;
+            text-align: center;
+        }
+
+        .cta-button {
+            position: relative;
+            width: 100%;
+            background: var(--gradient-dark);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            animation: glow 2s infinite;
+        }
+
+        .cta-button::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 50%);
+            transform: scale(0);
+            transition: transform 0.6s;
+        }
+
+        .cta-button:hover::after {
+            transform: scale(1);
+        }
+
+        .output {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            text-align: center;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Animation for form switching */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .form-container:not(.hidden) {
+            animation: slideIn 0.5s forwards;
+        }
+
+    .logo {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 700;
+        font-size: 1.25rem;
+        color: var(--primary-red);
+        cursor: pointer;
+    }
+
+    .logo-img {
+        height: 2.5rem;
+        width: auto;
+    }
+
+    /* Fix container sizing for the login/register page */
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1.5rem;
+    }
+
+    .main-container {
+        max-width: 1000px;
+        margin: 6rem auto 4rem; /* Reduced from 8rem to 6rem */
+        padding: 0 1.5rem;
+        display: flex;
+        justify-content: center;
+    }
+    </style>
+</head>
+<body class="dark">
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-content">
+                <div class="logo" onclick="window.location.href='/'">
+                    <img src="../static/logo.png" alt="AnarchKey Logo" class="logo-img">
+                    <span>AnarchKey</span>
+                </div>
+                <div class="nav-actions">
+                    <button id="themeToggle" class="theme-toggle">
+                        <i data-lucide="sun" class="sun-icon"></i>
+                        <i data-lucide="moon" class="moon-icon"></i>
+                    </button>
+                    <button onclick="window.location.href='/'" class="secondary-btn">Home</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <div class="form-container" id="sign-in-form">
+            <h2>Sign In</h2>
+            <form id="signinForm">
+                <input type="text" id="signinUsername" placeholder="Username" required>
+                <input type="password" id="signinPassword" placeholder="Password" required>
+                <button type="submit" class="cta-button">
+                    <span class="cta-text">Secure Sign In</span>
+                </button>
+                <div id="signinOutput" class="output"></div>
+            </form>
+            <p>New to AnarchKey? <a href="#" onclick="showSignUp()">Create Account</a></p>
+            <p><a href="/forgot_password">Forgot Password?</a></p>
+        </div>
+
+        <div class="form-container hidden" id="sign-up-form">
+            <h2>Create Account</h2>
+            <form id="signupForm">
+                <input type="text" id="email" placeholder="Email" required>
+                <input type="text" id="signupUsername" placeholder="Username" required>
+                <input type="password" id="signupPassword" placeholder="Password" required>
+                <input type="text" id="otp" placeholder="Enter OTP Code" class="hidden" required>
+                <button type="button" class="cta-button" id="sendOtpButton" onclick="sendOtp()">
+                    <span class="cta-text">Send Verification Code</span>
+                </button>
+                <button type="submit" class="cta-button hidden" id="signupButton">
+                    <span class="cta-text">Create Secure Account</span>
+                </button>
+                <div id="signupOutput" class="output"></div>
+            </form>
+            <p>Already a member? <a href="#" onclick="showSignIn()">Sign In</a></p>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>© 2025 AnarchKey | All Rights Reserved | Military-grade encryption for your API keys</p>
+            <br>
+            <p>Powered by <a href="https://protobase.pythonanywhere.com" target="_blank" style="color: #ff4b2b; text-decoration: none;">ProtoBase</a> – because reinventing authentication is for people with too much free time.</p>
+            <br>
+            <p>Fear me mortals</p>
+        </div>
+    </footer>
+
+    <script src="../static/getstarted.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize Lucide icons
+            lucide.createIcons();
+
+            // Theme toggle functionality
+            const themeToggle = document.getElementById('themeToggle');
+            const body = document.body;
+
+            themeToggle.addEventListener('click', () => {
+                body.style.transition = 'background-color 0.5s ease, color 0.5s ease';
+                body.classList.toggle('dark');
+
+                // Add ripple effect to theme toggle
+                const ripple = document.createElement('div');
+                ripple.style.position = 'fixed';
+                ripple.style.top = '0';
+                ripple.style.left = '0';
+                ripple.style.width = '100%';
+                ripple.style.height = '100%';
+                ripple.style.backgroundColor = body.classList.contains('dark') ? 'rgba(0,0,0,0.2)' : 'rgba(255,255,255,0.2)';
+                ripple.style.transition = 'opacity 0.5s ease';
+                ripple.style.zIndex = '999';
+                document.body.appendChild(ripple);
+
+                setTimeout(() => {
+                    ripple.style.opacity = '0';
+                    setTimeout(() => ripple.remove(), 500);
+                }, 50);
+            });
+
+            // Enhanced button hover effects
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(button => {
+                button.addEventListener('mouseenter', () => {
+                    button.style.transform = 'translateY(-4px) scale(1.05)';
+                    button.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+                });
+
+                button.addEventListener('mouseleave', () => {
+                    button.style.transform = 'translateY(0) scale(1)';
+                });
+
+                // Add click ripple effect
+                button.addEventListener('click', (e) => {
+                    const ripple = document.createElement('div');
+                    const rect = button.getBoundingClientRect();
+
+                    ripple.style.position = 'absolute';
+                    ripple.style.width = ripple.style.height = '100px';
+                    ripple.style.left = `${e.clientX - rect.left - 50}px`;
+                    ripple.style.top = `${e.clientY - rect.top - 50}px`;
+                    ripple.style.backgroundColor = 'rgba(255,255,255,0.3)';
+                    ripple.style.borderRadius = '50%';
+                    ripple.style.transform = 'scale(0)';
+                    ripple.style.animation = 'ripple 0.6s linear';
+                    ripple.style.pointerEvents = 'none';
+
+                    button.style.position = 'relative';
+                    button.style.overflow = 'hidden';
+                    button.appendChild(ripple);
+
+                    setTimeout(() => ripple.remove(), 600);
+                });
+            });
+        });
+
+        // Add CSS keyframes for ripple animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple {
+                to {
+                    transform: scale(4);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
