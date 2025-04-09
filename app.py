@@ -2,11 +2,10 @@ from flask import Flask, render_template, request, session, redirect, jsonify, u
 import Authentication
 import os
 from dotenv import load_dotenv
-import hashlib
 
 
 load_dotenv()
-db = Authentication.Auth()
+db = Authentication.AnarchAuthentication()
 
 app = Flask(__name__)
 app.secret_key = os.getenv("secret")
@@ -78,9 +77,6 @@ def logout():
     return redirect(url_for("learn_more"))
 
 
-
-
-
 @app.route("/dashboard")
 def dashboard():
     if not session.get("user_signed_in"):
@@ -88,8 +84,6 @@ def dashboard():
     username = session.get("username")
     return render_template("dashboard.html", username=username)
 
-@app.route('/docs')
-def docs():
-    return render_template('docs.html')
+
 if __name__ == '__main__':
     app.run(load_dotenv=True)
