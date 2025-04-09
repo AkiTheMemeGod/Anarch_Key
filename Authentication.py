@@ -1,41 +1,41 @@
-from Database import Database
+from MongoClient import AnarchKeyHelpers
 from Utils import generate_api_key
-import sqlite3 as sq
-import protobase_client as pc
 
-
-class Auth(Database):
-    def signup(self, username, password):
+class AnarchAuthentication(AnarchKeyHelpers):
+    def signup(self, email, username, password):
         api_key = generate_api_key()
-        data = (username ,password, api_key)
-        try:
-            self.cur.execute("INSERT INTO Account VALUES (?,?,?)", data)
-            self.con.commit()
-            self.con.close()
-            return {"success": True,"status":200, "message":"User SignedUp Successfully"}
+        usernames = self.get_all_users()
+        emails = self.get_all_emails()
+        print(emails)
+        print(usernames)
+        if username not in usernames and email not in emails:
+            self.insert_new_user(email=email,
+                                 username=username,
+                                 password=password,
+                                 api_key=api_key)
 
-        except sq.IntegrityError:
+            return {"success": True,"status":200, "message":"User SignedUp Successfully"}
+        elif username not in usernames and email in emails:
+            return {"success": False,"status":302, "message":"Email already in use"}
+        elif username in usernames and email not in emails:
+            return {"success": False,"status":302, "message":"Username already exists"}
+        else:
             return {"success": False,"status":302, "message":"Username already exists"}
 
     def login(self,username, password):
-        usernames = self.user_data()
-
-        if username in usernames and usernames[username] == password:
-            self.con.close()
-            return {"success": True,"status":200, "message":"User Logged in Successfully"}
-
-        elif username in usernames and usernames[username] != password:
-            return {"success": False,"status":302, "message":"Incorrect Credentials"}
-
-        elif username not in usernames:
-            return {"success": False,"status":302, "message":"Incorrect Credentials"}
-
+        info = self.get_user_info(username)
+        if info:
+            if info['username'] == username and self.decrypt(info['password_hash']) == password:
+                return {"success": True,"status":200, "message":"User Logged in Successfully"}
+            elif info['username'] == username and self.decrypt(info['password_hash']) != password:
+                return {"success": False,"status":302, "message":"Incorrect Password"}
+            else:
+                return {"success": False,"status":302, "message":"Something went wrong! Please Try Again"}
         else:
-            return {"success": False,"status":302, "message":"Something went wrong! Please Try Again"}
+            return {"success": False, "status": 302, "message": "Username Doesn't Exist"}
 
 
-
-class ProtoAuth:
+"""class ProtoAuth:
     def __init__(self, api_key):
         self.api_key = api_key
         self.client = pc.ProtoBaseClient()
@@ -45,4 +45,6 @@ class ProtoAuth:
 
     def signup(self, username, password):
         response = self.client.signup_username(username, password, self.api_key)
-        return response
+        return response"""
+
+a = AnarchAuthentication()
