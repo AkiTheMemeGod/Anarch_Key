@@ -2,11 +2,10 @@ from flask import Flask, render_template, request, session, redirect, jsonify, u
 import Authentication
 import os
 from dotenv import load_dotenv
-
-
+from MongoClient import AnarchKeyAPI
+api = AnarchKeyAPI('AkiTheMemeGod', '1234','cwPrYZJGkOs-2AixoJXyXwoKe-CNFHHazKvDPz5mQ31DVaQZW9Y0PBs6BDkQTOV2')
 load_dotenv()
 db = Authentication.AnarchAuthentication()
-
 app = Flask(__name__)
 app.secret_key = os.getenv("secret")
 
@@ -76,6 +75,16 @@ def logout():
     session.pop("username", None)
     return redirect(url_for("learn_more"))
 
+@app.route('/get_api_key', methods=['POST'])
+def get_api_key():
+    data = request.get_json()
+    project_name = data.get("project_name")
+    username = data.get("username")
+    api_key = api.retrieve_api_key(project_name, username)
+    if api_key:
+        return jsonify(success=True, api_key=api_key)
+    else:
+        return jsonify(success=False, message="API key not found.")
 
 @app.route("/dashboard")
 def dashboard():

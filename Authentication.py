@@ -47,4 +47,3 @@ class AnarchAuthentication(AnarchKeyHelpers):
         response = self.client.signup_username(username, password, self.api_key)
         return response"""
 
-a = AnarchAuthentication()
