@@ -366,7 +366,6 @@ cancelCreateKey.addEventListener('click', () => {
 // Form submission for creating a new key
 const createKeyForm = document.getElementById('createKeyForm');
 createKeyForm.addEventListener('submit', (e) => {
-    console.log("Add Key Pressed");
     e.preventDefault();
     const projectName = document.getElementById('projectName').value;
     const customApiKey = document.getElementById('customApiKey').value;
@@ -386,11 +385,9 @@ createKeyForm.addEventListener('submit', (e) => {
     .then(data => {
         if (data.success) {
             createKeyModal.style.display = 'none';
-            console.log("API key added successfully:", data);
             alert('API key added successfully!');
             loadApiKeys(); // Refresh the list
         } else {
-            console.log("API key addition failed:", data);
             alert(data.message || 'Failed to add API key');
         }
     })
@@ -486,17 +483,14 @@ function fetchUserDetails() {
                 // Add a separate function for handling the clicks
                 function handleApiKeyActions(e) {
                     // Log any click on the container for debugging
-                    console.log('Click detected on:', e.target);
 
                     if (e.target.classList.contains('view-btn')) {
                         const keyItem = e.target.closest('.api-key-item');
                         const apiKey = keyItem.dataset.apiKey;
-                        console.log('View button clicked for key:', apiKey);
                         viewApiKey(apiKey);
                     } else if (e.target.classList.contains('delete-btn')) {
                         const keyItem = e.target.closest('.api-key-item');
                         const keyId = keyItem.dataset.keyId;
-                        console.log('Delete button clicked for key ID:', keyId);
                         deleteApiKey(keyId);
                     }
                 }
@@ -522,7 +516,6 @@ function fetchUserDetails() {
 
     // Function to render activity chart
 document.addEventListener("DOMContentLoaded", () => {
-    console.log("DOM fully loaded. Initializing AnarchKey dashboard...");
     loadActivityData();
 });
 
@@ -538,7 +531,6 @@ function loadActivityData() {
         if (data.success) {
             const activitySection = document.querySelectorAll('.feature-card')[2];
             const activityContainer = activitySection.querySelector('div:nth-of-type(2)');
-            console.log("Activity container found:", activityContainer);
 
             if (!activityContainer) {
                 console.error('Activity container not found.');
@@ -643,7 +635,6 @@ function renderActivityChart(usage) {
 }
 // Function to view API key details
 function viewApiKey(apiKey) {
-    console.log("View API key called with:", apiKey);
 
     const viewKeyModal = document.getElementById('viewKeyModal');
     if (!viewKeyModal) {
@@ -699,7 +690,6 @@ function viewApiKey(apiKey) {
 
 // Function to delete an API key
 function deleteApiKey(keyId) {
-    console.log("Delete API key called with ID:", keyId);
 
     if (confirm('Are you sure you want to delete this API key? This action cannot be undone.')) {
         fetch('/delete_api_key', {
@@ -726,7 +716,6 @@ function deleteApiKey(keyId) {
         });
     }
 }
-        console.log(document.querySelector('#activityChart'));
 
     </script>
 </body>
