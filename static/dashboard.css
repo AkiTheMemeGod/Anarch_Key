@@ -1,0 +1,244 @@
+.view-btn, .delete-btn {
+    padding: 0.4rem 0.8rem;
+    border-radius: 0.25rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    border: none;
+}
+
+.view-btn {
+background: rgba(59, 130, 246, 0.2);
+color: rgb(59, 130, 246);
+}
+
+.view-btn:hover {
+background: rgba(59, 130, 246, 0.3);
+}
+
+.delete-btn {
+background: rgba(239, 68, 68, 0.2);
+color: rgb(239, 68, 68);
+}
+
+.delete-btn:hover {
+background: rgba(239, 68, 68, 0.3);
+}
+
+.api-key-actions {
+display: flex;
+gap: 0.5rem;
+}
+.dashboard-container {
+    max-width: 1200px;
+    margin: 6rem auto 0;
+    padding: 2rem 1.5rem;
+    animation: fadeIn 0.8s ease-out;
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.welcome-card {
+    background: var(--gradient-dark);
+    border-radius: 1rem;
+    padding: 2rem;
+    color: white;
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.welcome-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 50%);
+    animation: pulse 8s infinite;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+@media (max-width: 768px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.api-key-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: rgba(239, 68, 68, 0.1);
+    border-radius: 0.5rem;
+    margin-bottom: 0.5rem;
+    transition: var(--transition);
+}
+
+.api-key-item:hover {
+    transform: translateY(-2px);
+    background: rgba(239, 68, 68, 0.15);
+}
+
+.api-key-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.key-badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background: var(--primary-red);
+    color: white;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 3rem;
+    opacity: 0.6;
+}
+
+.action-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--primary-red);
+    transition: var(--transition);
+}
+
+.action-btn:hover {
+    transform: scale(1.1);
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1001;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+}
+
+.modal-content {
+    background: var(--card-light);
+    border-radius: 1rem;
+    padding: 2rem;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    position: relative;
+}
+
+body.dark .modal-content {
+    background: var(--card-dark);
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-dark);
+}
+
+body.dark .form-group input {
+    border-color: rgba(255, 255, 255, 0.1);
+    color: var(--text-light);
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+.feature-card {
+position: relative; /* Ensure it doesn't overlap unintentionally */
+z-index: 1; /* Ensure it is above other elements */
+pointer-events: auto; /* Allow interactions */
+}
+
+.api-key-item {
+position: relative; /* Ensure child elements are clickable */
+z-index: 2; /* Ensure it is above the feature card */
+pointer-events: auto; /* Allow interactions */
+}
+
+.custom-alert {
+    position: fixed;
+    top: 20%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--card-light);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    z-index: 1002;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    animation: fadeIn 0.3s ease-out;
+}
+
+body.dark .custom-alert {
+    background: var(--card-dark);
+}
+
+.custom-alert-content p {
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    color: var(--text-dark);
+}
+
+body.dark .custom-alert-content p {
+    color: var(--text-light);
+}
+
+.hidden {
+    display: none;
+}
+.custom-alert.success {
+    background: rgba(34, 197, 94, 0.2);
+    color: rgb(34, 197, 94);
+}
+
+.custom-alert.error {
+    background: rgba(239, 68, 68, 0.2);
+    color: rgb(239, 68, 68);
+}
