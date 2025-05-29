@@ -3,12 +3,9 @@ import os
 from dotenv import load_dotenv
 from AnarchDB import AnarchAPI
 from AnarchKeyAuthentication import AnarchKeyAuth, AnarchKeyService
-
+from Anarch2FA import Anarch2FA
 load_dotenv()
-from flask import Flask
-
 app = Flask(__name__)
-
 
 app.secret_key = os.getenv("secret")
 
@@ -17,6 +14,10 @@ def get_api():
         g.api = AnarchAPI()
     return g.api
 
+def two_fa():
+    if '2fa' not in g:
+        g.two_fa = Anarch2FA()
+    return g.two_fa
 
 def get_auth():
     if 'auth' not in g:
@@ -48,7 +49,7 @@ def learn_more():
 @app.route('/dashboard')
 def dashboard():
     if session.get("user_signed_in"):
-        return render_template("dashboard.html")
+        return render_template("dashboard.html", username=session["username"])
     return redirect(url_for("learn_more"))
 
 @app.route('/send_otp', methods=['POST'])
@@ -57,9 +58,11 @@ def send_otp():
     email = data.get("email")
     username = data.get("username")
 
-    if not db.duplicate_email_check(email) and not db.duplicate_username_check(username, "dev_api_tokens"):
-        success, session['c_otp'] = db.auth.send_otp(email=email, username=username)
+    _2fa = two_fa()
 
+    if not _2fa.duplicate_email_check(email) and not _2fa.duplicate_username_check(username):
+        success, session['c_otp'] = _2fa.send_otp(email=email, username=username)
+        print(success, session['c_otp'])
         if success:
             return jsonify(success=True)
         else:
@@ -87,6 +90,65 @@ def signup():
 
     else:
         return jsonify(response)
+
+
+@app.route('/view_service_key', methods=['GET', 'POST'])
+def view_service_key():
+    if not session.get("user_signed_in"):
+        return redirect(url_for("learn_more"))
+
+    if request.method == 'GET':
+        # Show the initial page requesting email verification
+        return render_template("verify_email.html")
+
+    # Handle POST request (for OTP verification)
+    data = request.get_json()
+    otp = data.get("otp")
+    email = data.get("email")
+
+    if 'verify_email_otp' not in session or not email:
+        return jsonify(success=False, message="Email verification required")
+
+    if str(session['verify_email_otp']) == str(otp):
+        auth = get_auth()
+        service_key = auth.get_user_service_key(session['username'])
+        if service_key:
+            session['service_key'] = service_key
+            return jsonify(success=True, redirect=url_for("show_service_key"))
+
+    return jsonify(success=False, message="Invalid OTP")
+
+@app.route('/send_verification_otp', methods=['POST'])
+def send_verification_otp():
+    if not session.get("user_signed_in"):
+        return jsonify(success=False, message="User not logged in")
+
+    data = request.get_json()
+    email = data.get("email")
+
+    db_service = get_auth()
+    db_service.cur.execute("SELECT email FROM USERS WHERE username=?", (session['username'],))
+    result = db_service.cur.fetchone()
+
+    if not result or result[0] != email:
+        return jsonify(success=False, message="Email does not match account")
+
+    _2fa = two_fa()
+    success, otp = _2fa.send_otp(email=email, username=session['username'])
+
+    if success:
+        session['verify_email_otp'] = otp
+        return jsonify(success=True, message="OTP sent successfully")
+
+    return jsonify(success=False, message="Failed to send OTP")
+
+@app.route('/show_service_key')
+def show_service_key():
+    if not session.get("user_signed_in") or 'service_key' not in session:
+        return redirect(url_for("dashboard"))
+
+    service_key = session.pop('service_key', None)
+    return render_template("service_key.html", service_key=service_key)
 
 @app.route('/signin', methods=['POST'])
 def signin():
@@ -208,19 +270,16 @@ def add_api_key():
     try:
         db_service = get_auth()
 
-        # Check if project exists
         db_service.cur.execute("SELECT 1 FROM PROJECTS WHERE project_name=? AND username=?",
                                (project_name, username))
         project_exists = db_service.cur.fetchone()
 
-        # Create project if it doesn't exist
         if not project_exists:
             print(f"Creating new project: {project_name} for {username}")
             project_result = db_service.insert_new_project(project_name, username, "Created from dashboard")
             if not project_result['success']:
                 return jsonify(project_result)
 
-        # Now add the API key
         print(f"Inserting API key for project: {project_name}")
         result = db_service.insert_new_api_key(project_name, api_key)
         return jsonify(result)
@@ -241,7 +300,6 @@ def delete_api_key():
     try:
         db_service = get_auth()
 
-        # Get the project name for this key ID
         db_service.cur.execute("""
             SELECT project_name FROM APIKEYS WHERE rowid = ?
         """, (key_id,))
@@ -260,14 +318,12 @@ def delete_api_key():
         if not db_service.cur.fetchone():
             return jsonify({'success': False, 'message': 'Unauthorized to delete this key'})
 
-        # Delete the key
         db_service.cur.execute("DELETE FROM APIKEYS WHERE rowid = ?", (key_id,))
         db_service.con.commit()
 
         return jsonify({'success': True, 'message': 'API key deleted successfully'})
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)})
-
 
 @app.route('/get_api_usage', methods=['GET'])
 def get_api_usage():
@@ -301,13 +357,37 @@ def get_api_usage():
                     'uses': usage_data[1] or 0
                 })
 
-        # Sort by timestamp, most recent first
         usage.sort(key=lambda x: x['timestamp'], reverse=True)
 
         return jsonify({'success': True, 'usage': usage})
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)})
 
+@app.route('/account_settings')
+def account_settings():
+    if not session.get("user_signed_in"):
+        return redirect(url_for("learn_more"))
+    return render_template("account_settings.html", username=session["username"])
+
+@app.route('/update_account_settings', methods=['POST'])
+def update_account_settings():
+    if not session.get("user_signed_in"):
+        return jsonify({'success': False, 'message': 'User not logged in'})
+
+    data = request.get_json()
+    email = data.get('email')
+    password = data.get('password')
+
+    if not email:
+        return jsonify({'success': False, 'message': 'Email is required'})
+
+    try:
+        db_service = get_auth()
+        if db_service.reset_password(email, session['username'], password):
+            return jsonify({'success': True, 'message': 'Account settings updated successfully'})
+        return jsonify({'success': False, 'message': 'Failed to update account settings'})
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)})
 
 if __name__ == '__main__':
     app.run(load_dotenv=True)
