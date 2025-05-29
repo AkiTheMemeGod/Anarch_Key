@@ -24,3 +24,19 @@ class AnarchKeyAuth(AnarchKeyService):
             return {"success": False, "status": 404, "message": "User Not Found"}
 
 
+    def reset_password(self, email, username, password):
+        try:
+            self.cur.execute("""
+                                   UPDATE USERS
+                                   SET email    = ?,
+                                       hash_pwd = ?
+                                   WHERE username = ?
+                                   """, (email, self.encrypt(password), username))
+            self.con.commit()
+            if self.cur.rowcount > 0:
+                return True
+            else:
+                return False
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            return False
