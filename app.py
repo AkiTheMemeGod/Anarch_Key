@@ -1,4 +1,6 @@
 from flask import Flask, render_template, request, session, redirect, jsonify, url_for, g
+from flask_cors import CORS
+
 import os
 from dotenv import load_dotenv
 from AnarchDB import AnarchAPI
@@ -7,8 +9,8 @@ from Anarch2FA import Anarch2FA
 load_dotenv()
 app = Flask(__name__)
 
-app.secret_key = os.getenv("secret")
-
+app.secret_key = os.getenv("secret") or os.urandom(24)
+CORS(app)
 def get_api():
     if 'api' not in g:
         g.api = AnarchAPI()
