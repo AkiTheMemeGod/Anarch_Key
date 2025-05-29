@@ -14,15 +14,19 @@ class AnarchDB:
             key = f.read()
         self.key = key
         self.fernet = Fernet(key)
+        self.path = os.path.dirname(__file__)
 
-class KeyEncryptor(AnarchDB):
+    def get_user_service_key(self, username):
+        self.cur.execute("SELECT API_KEY FROM USERS WHERE username = ?", (username,))
+        return self.cur.fetchone()[0]
+class AnarchCrypt(AnarchDB):
     def encrypt(self, data):
         return self.fernet.encrypt(data.encode()).decode()
 
     def decrypt(self, encrypted_data):
         return self.fernet.decrypt(encrypted_data.encode()).decode()
 
-class AnarchKeyService(KeyEncryptor):
+class AnarchKeyService(AnarchCrypt):
     def insert_new_user(self, email, username, password, api_key):
         try:
             self.cur.execute("INSERT INTO USERS (email, username, hash_pwd, created_at, API_KEY) VALUES (?, ?, ?, ?, ?)",
@@ -88,5 +92,3 @@ class AnarchAPI(AnarchKeyService):
             return {"success": True, "status": 200, "api_key": self.decrypt(result[1])}
         else:
             return {"success": False, "status": 401, "message": "API Key Retrieval Failed"}
-
-# push to GitHub
