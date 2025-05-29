@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="SqlDialectMappings">
+    <file url="file://$PROJECT_DIR$/Anarch2FA.py" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/AnarchDB.py" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/AnarchKeyAuthentication.py" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/app.py" dialect="SQLite" />
   </component>
 </project>
