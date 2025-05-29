@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AnarchKey - Email Verification</title>
+    <link rel="icon" href="/static/logo.png" type="image/x-icon" style="width: 10px; height: 10px;">
+    <link rel="stylesheet" href="../static/index.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+    input[type="email"],
+    input[type="text"],
+    input[type="password"] {
+        width: 100%;
+        padding: 12px 15px;
+        border-radius: 6px;
+        border: 1px solid var(--border-color);
+        background-color: var(--input-bg);
+        color: var(--text-color);
+        font-size: 16px;
+        margin-top: 6px;
+        outline: none;
+        transition: border-color 0.3s;
+    }
+
+    input:focus {
+        border-color: var(--primary-red);
+        box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+    }
+</style>
+</head>
+<body class="dark">
+
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-content">
+                <div class="logo">
+                    <img src="../static/logo.png" alt="AnarchKey Logo" class="logo-img">
+                    <span>AnarchKey</span>
+                </div>
+                <div class="nav-actions">
+                    <button id="themeToggle" class="theme-toggle">
+                        <i data-lucide="sun" class="sun-icon"></i>
+                        <i data-lucide="moon" class="moon-icon"></i>
+                    </button>
+                    <button onclick="window.location.href='/dashboard'" class="secondary-btn">Back to Dashboard</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container" style="margin-top: 8rem; max-width: 600px;">
+        <div class="feature-card">
+            <h2 style="margin-bottom: 1.5rem; text-align: center;">Verify Your Email</h2>
+            <p style="margin-bottom: 2rem; text-align: center;">For security purposes, we need to verify your email before showing your service key.</p>
+
+<div id="email-step">
+    <div class="form-group">
+        <label for="usermail">Confirm Your Email</label>
+        <input type="email" id="usermail" name="mail" placeholder="Enter your registered email" required style="z-index: 1; position: relative;">
+    </div>
+    <button id="sendOtpBtn" class="primary-btn" style="width: 100%; margin-top: 1.5rem;">Send OTP</button>
+</div>
+
+            <div id="otp-step" style="display: none;">
+                <div class="form-group">
+                    <label for="otp">Enter OTP</label>
+                    <input type="text" id="otp" placeholder="Enter the OTP sent to your email" required style="z-index: 1; position: relative;">
+                </div>
+                <button id="verifyOtpBtn" class="primary-btn" style="width: 100%; margin-top: 1.5rem;">Verify OTP</button>
+            </div>
+
+            <div id="status-message" style="margin-top: 1.5rem; text-align: center; color: var(--primary-red); display: none;"></div>
+        </div>
+    </div>
+
+    <footer style="position: fixed; bottom: 0; width: 100%;">
+        <div class="container">
+            <p>© 2025 AnarchKey | All Rights Reserved | No API keys were harmed in the making of this product</p>
+            <br>
+            <p>Powered by <a href="https://protobase.pythonanywhere.com" target="_blank" style="color: #ff4b2b; text-decoration: none;">ProtoBase</a> – because reinventing authentication is for people with too much free time.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            lucide.createIcons();
+
+            // Theme toggle functionality
+            const themeToggle = document.getElementById('themeToggle');
+            themeToggle.addEventListener('click', function() {
+                document.body.classList.toggle('dark');
+            });
+
+            // Send OTP button
+            const sendOtpBtn = document.getElementById('sendOtpBtn');
+            sendOtpBtn.addEventListener('click', function() {
+                let email = document.getElementById('usermail').value.trim();
+
+                if (!email) {
+                    showStatusMessage('Please enter your email address');
+                    return;
+                }
+
+                // Show loading state
+                sendOtpBtn.disabled = true;
+                sendOtpBtn.textContent = 'Sending...';
+
+                fetch('/send_verification_otp', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email: email })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById('email-step').style.display = 'none';
+                        document.getElementById('otp-step').style.display = 'block';
+                        showStatusMessage('OTP sent to your email', 'success');
+                    } else {
+                        showStatusMessage(data.message || 'Failed to send OTP');
+                        sendOtpBtn.disabled = false;
+                        sendOtpBtn.textContent = 'Send OTP';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showStatusMessage('An error occurred. Please try again.');
+                    sendOtpBtn.disabled = false;
+                    sendOtpBtn.textContent = 'Send OTP';
+                });
+            });
+
+            // Verify OTP button
+            const verifyOtpBtn = document.getElementById('verifyOtpBtn');
+            verifyOtpBtn.addEventListener('click', function() {
+                const otp = document.getElementById('otp').value;
+                const email = document.getElementById('usermail').value;
+
+                if (!otp) {
+                    showStatusMessage('Please enter the OTP');
+                    return;
+                }
+
+                fetch('/view_service_key', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ otp: otp, email: email })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.href = data.redirect;
+                    } else {
+                        showStatusMessage(data.message || 'Invalid OTP');
+                    }
+                })
+                .catch(error => {
+                    showStatusMessage('An error occurred. Please try again.');
+                });
+            });
+
+            function showStatusMessage(message, type = 'error') {
+                const statusElement = document.getElementById('status-message');
+                statusElement.textContent = message;
+                statusElement.style.display = 'block';
+
+                if (type === 'success') {
+                    statusElement.style.color = '#10b981'; // Green color for success
+                } else {
+                    statusElement.style.color = 'var(--primary-red)'; // Red color for error
+                }
+            }
+        });
+    </script>
+</body>
+</html>
