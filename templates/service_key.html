@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AnarchKey - Your Service Key</title>
+    <link rel="icon" href="/static/logo.png" type="image/x-icon" style="width: 10px; height: 10px;">
+    <link rel="stylesheet" href="../static/index.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .key-container {
+            background: rgba(239, 68, 68, 0.1);
+            border: 2px solid var(--primary-red);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .key-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(239, 68, 68, 0.2) 0%, transparent 70%);
+            animation: pulse 8s infinite;
+            z-index: 0;
+        }
+
+        .service-key {
+            font-family: monospace;
+            font-size: 1.25rem;
+            letter-spacing: 1px;
+            font-weight: 600;
+            position: relative;
+            z-index: 1;
+            word-break: break-all;
+        }
+
+        .security-notice {
+            background: rgba(0, 0, 0, 0.05);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-top: 2rem;
+            border-left: 4px solid var(--primary-red);
+        }
+
+        body.dark .security-notice {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: rgba(239, 68, 68, 0.2);
+            border: none;
+            border-radius: 0.25rem;
+            padding: 0.25rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .copy-btn:hover {
+            background: rgba(239, 68, 68, 0.4);
+        }
+    </style>
+</head>
+<body class="dark">
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-content">
+                <div class="logo">
+                    <img src="../static/logo.png" alt="AnarchKey Logo" class="logo-img">
+                    <span>AnarchKey</span>
+                </div>
+                <div class="nav-actions">
+                    <button id="themeToggle" class="theme-toggle">
+                        <i data-lucide="sun" class="sun-icon"></i>
+                        <i data-lucide="moon" class="moon-icon"></i>
+                    </button>
+                    <button onclick="window.location.href='/dashboard'" class="secondary-btn">Back to Dashboard</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container" style="margin-top: 8rem; max-width: 800px;">
+        <div class="feature-card">
+            <h2 style="margin-bottom: 1.5rem; text-align: center;">Your AnarchKey Service Key</h2>
+            <p style="text-align: center; margin-bottom: 2rem;">This key allows you to integrate AnarchKey services with your applications.</p>
+
+            <div class="key-container">
+                <button class="copy-btn" id="copyBtn" title="Copy to clipboard">
+                    <i data-lucide="copy" style="width: 1rem; height: 1rem;"></i>
+                </button>
+                <p class="service-key">{{ service_key }}</p>
+            </div>
+
+            <div class="security-notice">
+                <h4 style="margin-bottom: 0.5rem;"><i data-lucide="shield" style="width: 1rem; height: 1rem; vertical-align: middle; margin-right: 0.5rem;"></i> Security Notice</h4>
+                <p>Never share this key with anyone. It provides full access to your AnarchKey services. If you believe this key has been compromised, contact support immediately.</p>
+            </div>
+
+            <div style="text-align: center; margin-top: 2rem;">
+                <button onclick="window.location.href='/dashboard'" class="secondary-btn">Return to Dashboard</button>
+            </div>
+        </div>
+    </div>
+
+    <footer style="position: fixed; bottom: 0; width: 100%;">
+        <div class="container">
+            <p>© 2025 AnarchKey | All Rights Reserved | No API keys were harmed in the making of this product</p>
+            <br>
+            <p>Powered by <a href="https://protobase.pythonanywhere.com" target="_blank" style="color: #ff4b2b; text-decoration: none;">ProtoBase</a> – because reinventing authentication is for people with too much free time.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            lucide.createIcons();
+
+            // Theme toggle functionality
+            const themeToggle = document.getElementById('themeToggle');
+            themeToggle.addEventListener('click', function() {
+                document.body.classList.toggle('dark');
+            });
+
+            // Copy to clipboard functionality
+            const copyBtn = document.getElementById('copyBtn');
+            copyBtn.addEventListener('click', function() {
+                const serviceKey = document.querySelector('.service-key').textContent;
+                navigator.clipboard.writeText(serviceKey)
+                    .then(() => {
+                        // Show success indicator
+                        copyBtn.innerHTML = '<i data-lucide="check" style="width: 1rem; height: 1rem;"></i>';
+                        lucide.createIcons();
+
+                        // Reset after 2 seconds
+                        setTimeout(() => {
+                            copyBtn.innerHTML = '<i data-lucide="copy" style="width: 1rem; height: 1rem;"></i>';
+                            lucide.createIcons();
+                        }, 2000);
+                    })
+                    .catch(err => {
+                        console.error('Failed to copy: ', err);
+                    });
+            });
+        });
+    </script>
+</body>
+</html>
