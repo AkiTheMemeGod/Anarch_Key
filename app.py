@@ -10,7 +10,7 @@ load_dotenv()
 app = Flask(__name__)
 
 app.secret_key = os.getenv("secret") or os.urandom(24)
-CORS(app)
+
 def get_api():
     if 'api' not in g:
         g.api = AnarchAPI()
@@ -390,6 +390,13 @@ def update_account_settings():
         return jsonify({'success': False, 'message': 'Failed to update account settings'})
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)})
+
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
+
 
 if __name__ == '__main__':
     app.run(load_dotenv=True)

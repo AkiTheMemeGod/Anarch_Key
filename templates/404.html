@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AnarchKey - Page Not Found</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <div class="navbar">
+        <div class="container nav-content">
+                <div class="logo">
+                    <img src="../static/logo.png" alt="AnarchKey Logo" class="logo-img">
+                    <span>AnarchKey</span>
+                </div>
+            <div class="nav-actions">
+                <button id="themeToggle" class="theme-toggle">
+                    <i data-lucide="moon" class="moon-icon"></i>
+                    <i data-lucide="sun" class="sun-icon"></i>
+                </button>
+                <a href="/static" class="primary-btn">Go Home</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container" style="min-height: 80vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
+        <div style="animation: float 4s ease-in-out infinite;">
+            <i data-lucide="alert-circle" style="width: 120px; height: 120px; color: var(--primary-red);"></i>
+        </div>
+
+        <h1 style="font-size: 4rem; margin: 2rem 0; background: var(--gradient-dark); -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: slideIn 0.8s ease-out;">
+            404
+        </h1>
+
+        <h2 style="font-size: 2rem; margin-bottom: 1.5rem; animation: slideIn 0.9s ease-out;">
+            Page Not Found
+        </h2>
+
+        <p style="font-size: 1.25rem; max-width: 42rem; margin: 0 auto 2rem; opacity: 0.9; animation: slideIn 1s ease-out;">
+            The page you're looking for doesn't exist or has been moved. Don't worry, even anarchists get lost sometimes.
+        </p>
+
+        <div class="hero-actions" style="animation: slideIn 1.2s ease-out;">
+            <a href="/static" class="primary-btn">Back to Home</a>
+            <a href="/dashboard" class="secondary-btn">Go to Dashboard</a>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>© 2025 AnarchKey | All Rights Reserved | No API keys were harmed in the making of this product</p>
+            <br>
+            <p>Powered by <a href="https://protobase.pythonanywhere.com" target="_blank" style="color: var(--primary-red); text-decoration: none;">ProtoBase</a> – because reinventing authentication is for people with too much free time.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            lucide.createIcons();
+
+            // Theme toggle functionality
+            const themeToggle = document.getElementById('themeToggle');
+            const savedTheme = localStorage.getItem('theme');
+
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark');
+            }
+
+            themeToggle.addEventListener('click', function() {
+                document.body.classList.toggle('dark');
+                localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+            });
+        });
+    </script>
+</body>
+</html>
