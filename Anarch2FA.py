@@ -3,17 +3,16 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import random as rd
-from dotenv import load_dotenv
-load_dotenv()
+from cred import *
 import sqlite3 as sq
-SENDER_EMAIL = os.getenv("SENDER_EMAIL")
-SENDER_PASSWORD = os.getenv("SENDER_PASSWORD")
+SENDER_EMAIL = SENDER_EMAIL
+SENDER_PASSWORD =SENDER_PASSWORD
 
 class Anarch2FA:
     def __init__(self):
-        self.con = sq.connect('AnarchKey.db')
-        self.cur = self.con.cursor()
         self.path = os.path.dirname(__file__)
+        self.con = sq.connect(f"{self.path}/AnarchKey.db")
+        self.cur = self.con.cursor()
     @staticmethod
     def generate_otp():
         otp = rd.randint(100000, 999999)

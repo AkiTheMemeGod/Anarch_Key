@@ -5,12 +5,13 @@ from datetime import datetime
 
 class AnarchDB:
     def __init__(self):
+        self.path = os.path.dirname(__file__)
         self.con = sq.connect('AnarchKey.db')
         self.cur = self.con.cursor()
-        if not os.path.exists("secret.key"):
-            with open("secret.key", "wb") as f:
+        if not os.path.exists(f"{self.path}/secret.key"):
+            with open(f"{self.path}/secret.key", "wb") as f:
                 f.write(Fernet.generate_key())
-        with open("secret.key", "rb") as f:
+        with open(f"{self.path}/secret.key", "rb") as f:
             key = f.read()
         self.key = key
         self.fernet = Fernet(key)
