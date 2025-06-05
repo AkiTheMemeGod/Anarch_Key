@@ -27,15 +27,17 @@ class AnarchCrypt(AnarchDB):
         return self.fernet.decrypt(encrypted_data.encode()).decode()
 
 class AnarchKeyService(AnarchCrypt):
-    def insert_new_user(self, email, username, password, api_key):
-        try:
-            self.cur.execute("INSERT INTO USERS (email, username, hash_pwd, created_at, API_KEY) VALUES (?, ?, ?, ?, ?)",
-                             (email, username, self.encrypt(password), datetime.now(), api_key))
-            self.con.commit()
-            return {"success": True, "status": 200, "message": "User SignedUp Successfully"}
-        except sq.IntegrityError:
-            return {"success": False, "status": 302, "message": "Username already exists"}
-
+    def insert_new_user(self, email, username, password, api_key, c_otp, otp):
+        if int(c_otp) == int(otp):
+            try:
+                self.cur.execute("INSERT INTO USERS (email, username, hash_pwd, created_at, API_KEY) VALUES (?, ?, ?, ?, ?)",
+                                 (email, username, self.encrypt(password), datetime.now(), api_key))
+                self.con.commit()
+                return {"success": True, "status": 200, "message": "User SignedUp Successfully"}
+            except sq.IntegrityError:
+                return {"success": False, "status": 302, "message": "Username already exists"}
+        else:
+            return {"success": False, "status": 302, "message": "Invalid OTP"}
     def insert_new_project(self, project_name, username, description):
         try:
             self.cur.execute("INSERT INTO PROJECTS (username, project_name, description, created_at) VALUES (?, ?, ?, ?)",

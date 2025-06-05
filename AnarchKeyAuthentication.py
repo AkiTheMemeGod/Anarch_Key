@@ -4,10 +4,12 @@ from datetime import datetime
 
 class AnarchKeyAuth(AnarchKeyService):
 
-    def signup(self,email, username, password):
+    def signup(self,email, username, password, c_otp, otp):
         api_key = generate_api_key()
-        response = self.insert_new_user(email, username ,password, api_key)
+        response = self.insert_new_user(email, username ,password, api_key, c_otp, otp)
         return response
+
+
 
     def login(self,username, password):
         self.cur.execute("SELECT hash_pwd FROM USERS WHERE username=?", (username,))
@@ -28,7 +30,7 @@ class AnarchKeyAuth(AnarchKeyService):
         try:
             self.cur.execute("""
                                    UPDATE USERS
-                                   SET email    = ?,
+                                   SET email = ?,
                                        hash_pwd = ?
                                    WHERE username = ?
                                    """, (email, self.encrypt(password), username))

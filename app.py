@@ -64,7 +64,7 @@ def send_otp():
 
     if not _2fa.duplicate_email_check(email) and not _2fa.duplicate_username_check(username):
         success, session['c_otp'] = _2fa.send_otp(email=email, username=username)
-        print(success, session['c_otp'])
+        # print(success, session['c_otp'])
         if success:
             return jsonify(success=True)
         else:
@@ -81,9 +81,12 @@ def signup():
     username = data.get("username")
     password = data.get("password")
     email = data.get("email")
+    otp = data.get("otp")
+    c_otp = session.get("c_otp")
 
     auth = get_auth()
-    response = auth.signup(username=username, password=password, email=email)
+
+    response = auth.signup(username=username, password=password, email=email , c_otp=c_otp, otp=otp)
     if response['success']:
         session["user_signed_in"] = True
         session["username"] = username
