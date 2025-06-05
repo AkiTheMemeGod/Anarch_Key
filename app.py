@@ -103,10 +103,8 @@ def view_service_key():
         return redirect(url_for("learn_more"))
 
     if request.method == 'GET':
-        # Show the initial page requesting email verification
         return render_template("verify_email.html")
 
-    # Handle POST request (for OTP verification)
     data = request.get_json()
     otp = data.get("otp")
     email = data.get("email")
