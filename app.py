@@ -8,7 +8,7 @@ from Anarch2FA import Anarch2FA
 app = Flask(__name__)
 
 app.secret_key = secret
-
+CORS(app)
 def get_api():
     if 'api' not in g:
         g.api = AnarchAPI()
