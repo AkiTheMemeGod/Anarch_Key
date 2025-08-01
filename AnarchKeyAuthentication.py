@@ -10,7 +10,6 @@ class AnarchKeyAuth(AnarchKeyService):
         return response
 
 
-
     def login(self,username, password):
         self.cur.execute("SELECT hash_pwd FROM USERS WHERE username=?", (username,))
         result = self.cur.fetchone()
