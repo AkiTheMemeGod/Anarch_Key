@@ -2,6 +2,8 @@ from flask import Flask, render_template, request, session, redirect, jsonify, u
 from flask_cors import CORS
 from cred import *
 import os
+import secrets as st
+
 from AnarchDB import AnarchAPI
 from AnarchKeyAuthentication import AnarchKeyAuth, AnarchKeyService
 from Anarch2FA import Anarch2FA
@@ -390,11 +392,27 @@ def update_account_settings():
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)})
 
-
+@app.route('/anarchkey_init',methods=['POST'])
+def anarchkey_init():
+    data = request.get_json()
+    print(data)
+    username = data.get("username")
+    password = data.get("password")
+    token = st.token_hex(64)
+    api = get_api()
+    resp = api.add_salt_key(username=username, salt=token, password=password)
+    print(resp)
+    if resp["success"]:
+        return {"success": True, "status": 200, "token" : token}
+    else:
+        return {"success": False, "status": 302, "mesage" : "failed"}
+    
 
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
+
+
 
 
 if __name__ == '__main__':
