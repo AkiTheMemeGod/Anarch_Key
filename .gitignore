@@ -1,2 +1,9 @@
 secret.key
 .env
+cred.py
+__pycache__/Anarch2FA.cpython-313.pyc
+__pycache__/AnarchDB.cpython-313.pyc
+__pycache__/AnarchKeyAuthentication.cpython-313.pyc
+__pycache__/cred.cpython-313.pyc
+__pycache__/Utils.cpython-313.pyc
+.github/copilot-instructions.md
