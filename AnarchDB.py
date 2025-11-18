@@ -31,8 +31,8 @@ class AnarchKeyService(AnarchCrypt):
     def insert_new_user(self, email, username, password, api_key, c_otp, otp):
         if int(c_otp) == int(otp):
             try:
-                self.cur.execute("INSERT INTO USERS (email, username, hash_pwd, created_at, API_KEY) VALUES (?, ?, ?, ?, ?)",
-                                 (email, username, self.encrypt(password), datetime.now(), api_key))
+                self.cur.execute("INSERT INTO USERS (email, username, hash_pwd, created_at, API_KEY, salt_token) VALUES (?, ?, ?, ?, ?, ?)",
+                                 (email, username, self.encrypt(password), datetime.now(), api_key, ""))
                 self.con.commit()
                 return {"success": True, "status": 200, "message": "User SignedUp Successfully"}
             except sq.IntegrityError:
@@ -71,12 +71,37 @@ class AnarchKeyService(AnarchCrypt):
                 return {"success": False, "status": 302, "message": "API Key not found"}
         except Exception as e:
             return {"success": False, "status": 302, "message": str(e)}
+    
+    def add_salt_key(self, username, password, salt):
+        self.cur.execute("SELECT hash_pwd FROM USERS WHERE username=?", (username,))
+        result = self.cur.fetchone()
+
+        if result:
+            hash_pwd = result[0]
+            decrypted_pwd = self.decrypt(hash_pwd)
+        if decrypted_pwd == password:
+            try:
+                self.cur.execute("UPDATE USERS SET salt_token=? WHERE username=?",
+                                (salt, username,))
+                self.con.commit()
+                if self.cur.rowcount == 0:
+                    return {"success": False, "status": 404, "message": "User not found"}
+                return {"success": True, "status": 200}
+
+            except Exception as e:
+                print(e)
+                try:
+                    self.con.rollback()
+                except Exception:
+                    pass
+                return {"success": False, "status": 302, "message": str(e)}
 
 class AnarchAPI(AnarchKeyService):
     def validate_user_api_key(self,api_key, username):
-        self.cur.execute("SELECT * FROM USERS WHERE API_KEY=? AND username=?", (api_key, username,))
+        self.cur.execute("SELECT API_KEY, salt_token FROM USERS WHERE username=?", (username,))
         result = self.cur.fetchone()
-        if result:
+
+        if (result[0] + result[1]) == api_key:
             return {"success": True, "status": 200, "message": "API Key Validated Successfully"}
 
         else:
