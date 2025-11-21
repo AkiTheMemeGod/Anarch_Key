@@ -1,14 +1,247 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AnarchKey</title>
+    <title>AnarchKey - Secure API Key Management</title>
+    <meta name="description"
+        content="Military-grade encryption for your API keys. Stop hardcoding secrets and start securing them with AnarchKey.">
     <link rel="icon" href="/static/logo.png" type="image/x-icon" style="width: 10px; height: 10px;">
 
     <link rel="stylesheet" href="../static/index.css">
     <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* Additional styles for the usage section */
+        .usage-section {
+            padding: 6rem 0;
+            background: linear-gradient(180deg, transparent 0%, rgba(239, 68, 68, 0.05) 100%);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-header h2 {
+            font-size: 3rem;
+            font-weight: 800;
+            background: var(--gradient-dark);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        .section-header p {
+            font-size: 1.25rem;
+            opacity: 0.8;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: 2px solid var(--primary-red);
+            color: var(--primary-red);
+            padding: 1rem 2.5rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            font-size: 1.125rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tab-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(239, 68, 68, 0.2);
+        }
+
+        .tab-btn.active {
+            background: var(--gradient-dark);
+            color: white;
+            border-color: transparent;
+        }
+
+        .tab-content {
+            display: none;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .usage-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .usage-card {
+            background: var(--card-light);
+            padding: 2rem;
+            border-radius: 1rem;
+            border: 1px solid rgba(239, 68, 68, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        body.dark .usage-card {
+            background: var(--card-dark);
+            backdrop-filter: blur(12px);
+            border-color: rgba(239, 68, 68, 0.2);
+        }
+
+        .usage-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary-red);
+        }
+
+        .usage-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--primary-red);
+        }
+
+        .usage-card .step-number {
+            background: var(--gradient-dark);
+            color: white;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            margin: 1rem 0;
+            position: relative;
+            overflow-x: auto;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .code-block pre {
+            margin: 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .code-block .comment {
+            color: #6a9955;
+        }
+
+        .code-block .keyword {
+            color: #569cd6;
+        }
+
+        .code-block .string {
+            color: #ce9178;
+        }
+
+        .code-block .function {
+            color: #dcdcaa;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            background: rgba(239, 68, 68, 0.8);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .copy-btn:hover {
+            background: var(--primary-red);
+            transform: scale(1.05);
+        }
+
+        .full-width-card {
+            grid-column: 1 / -1;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            padding: 0.75rem 0;
+            display: flex;
+            align-items: start;
+            gap: 0.75rem;
+        }
+
+        .feature-list li::before {
+            content: "✓";
+            color: var(--primary-red);
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+
+        .highlight-box {
+            background: rgba(239, 68, 68, 0.1);
+            border-left: 4px solid var(--primary-red);
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .highlight-box h4 {
+            color: var(--primary-red);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .usage-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .section-header h2 {
+                font-size: 2rem;
+            }
+        }
+    </style>
 </head>
+
 <body class="dark">
     <nav class="navbar">
         <div class="container">
@@ -22,7 +255,7 @@
                         <i data-lucide="sun" class="sun-icon"></i>
                         <i data-lucide="moon" class="moon-icon"></i>
                     </button>
-                    <button onclick="window.location.href='/learn_more'" class="primary-btn" >Login | Register</button>
+                    <button onclick="window.location.href='/learn_more'" class="primary-btn">Login | Register</button>
                 </div>
             </div>
         </div>
@@ -37,7 +270,9 @@
             </p>
             <div class="hero-actions">
                 <button class="primary-btn" onclick="window.location.href='/learn_more'">Start Free Trial</button>
-                <button class="secondary-btn" onclick="window.location.href='/learn_more'">View Demo</button>
+                <button class="secondary-btn"
+                    onclick="document.getElementById('usage').scrollIntoView({behavior: 'smooth'})">View
+                    Documentation</button>
             </div>
         </div>
     </section>
@@ -48,7 +283,8 @@
                 <div class="feature-card">
                     <i data-lucide="shield" class="feature-icon"></i>
                     <h3>End-to-End Encryption</h3>
-                    <p>We encrypt everything. If someone gets your API keys, it's because you personally handed them over.</p>
+                    <p>We encrypt everything. If someone gets your API keys, it's because you personally handed them
+                        over.</p>
                 </div>
                 <div class="feature-card">
                     <i data-lucide="alert-triangle" class="feature-icon"></i>
@@ -58,7 +294,8 @@
                 <div class="feature-card">
                     <i data-lucide="zap" class="feature-icon"></i>
                     <h3>Track & Rotate Keys</h3>
-                    <p>Stop guessing if your API keys are being used. Track usage, automate rotation, and sleep at night.</p>
+                    <p>Stop guessing if your API keys are being used. Track usage, automate rotation, and sleep at
+                        night.</p>
                 </div>
                 <div class="feature-card">
                     <i data-lucide="globe" class="feature-icon"></i>
@@ -79,6 +316,235 @@
         </div>
     </section>
 
+    <!-- Usage Documentation Section -->
+    <section id="usage" class="usage-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>How to Use AnarchKey</h2>
+                <p>Get started in minutes with our Python or Node.js client libraries</p>
+            </div>
+
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab('python')" id="python-tab">
+                    <i data-lucide="package" style="width: 20px; height: 20px;"></i>
+                    Python (PyPI)
+                </button>
+                <button class="tab-btn" onclick="switchTab('nodejs')" id="nodejs-tab">
+                    <i data-lucide="box" style="width: 20px; height: 20px;"></i>
+                    Node.js (npm)
+                </button>
+            </div>
+
+            <!-- Python Tab Content -->
+            <div id="python-content" class="tab-content active">
+                <div class="usage-grid">
+                    <div class="usage-card">
+                        <h3><span class="step-number">1</span> Install the Package</h3>
+                        <p>Install AnarchKeyClient via pip:</p>
+                        <div class="code-block">
+                            <button class="copy-btn" onclick="copyCode(this)">
+                                <i data-lucide="copy" style="width: 14px; height: 14px;"></i>
+                                Copy
+                            </button>
+                            <pre>pip install AnarchKeyClient</pre>
+                        </div>
+                    </div>
+
+                    <div class="usage-card">
+                        <h3><span class="step-number">2</span> Create Account</h3>
+                        <p>Sign up for a free account:</p>
+                        <div class="highlight-box">
+                            <h4><i data-lucide="external-link" style="width: 18px; height: 18px;"></i> Registration</h4>
+                            <p>Visit <a href="https://anarchkey.pythonanywhere.com/" target="_blank"
+                                    style="color: var(--primary-red); font-weight: 600;">anarchkey.pythonanywhere.com</a>
+                                to create your account and get your credentials.</p>
+                        </div>
+                    </div>
+
+                    <div class="usage-card">
+                        <h3><span class="step-number">3</span> Initialize Client</h3>
+                        <p>Set up your local authentication token:</p>
+                        <div class="code-block">
+                            <button class="copy-btn" onclick="copyCode(this)">
+                                <i data-lucide="copy" style="width: 14px; height: 14px;"></i>
+                                Copy
+                            </button>
+                            <pre>anarchkey init --username &lt;YourUsername&gt; --password &lt;YourPassword&gt;</pre>
+                        </div>
+                        <p style="margin-top: 1rem; opacity: 0.8; font-size: 0.9rem;">
+                            <i data-lucide="info" style="width: 14px; height: 14px; display: inline;"></i>
+                            This creates a secure token file at <code>~/.anarchkey</code> with 0o600 permissions
+                        </p>
+                    </div>
+
+                    <div class="usage-card">
+                        <h3><span class="step-number">4</span> Use in Your Code</h3>
+                        <p>Retrieve your API keys securely:</p>
+                        <div class="code-block">
+                            <button class="copy-btn" onclick="copyCode(this)">
+                                <i data-lucide="copy" style="width: 14px; height: 14px;"></i>
+                                Copy
+                            </button>
+                            <pre><span class="keyword">from</span> AnarchKeyClient <span class="keyword">import</span> AnarchKeyClient
+
+<span class="comment"># Initialize the client</span>
+client = <span class="function">AnarchKeyClient</span>(
+    username=<span class="string">"YourUsername"</span>,
+    api_key=<span class="string">"YourAnarchKeyAPIKey"</span>
+)
+
+<span class="comment"># Retrieve an API key for your project</span>
+response = client.<span class="function">get_api_key</span>(project_name=<span class="string">"YourProjectName"</span>)
+
+<span class="comment"># Check if request was successful</span>
+<span class="keyword">if</span> response[<span class="string">"success"</span>]:
+    api_key = response[<span class="string">"key"</span>]
+    <span class="function">print</span>(<span class="string">f"Retrieved API key: {api_key}"</span>)
+<span class="keyword">else</span>:
+    <span class="function">print</span>(<span class="string">f"Error: {response['message']}"</span>)</pre>
+                        </div>
+                    </div>
+
+                    <div class="usage-card full-width-card">
+                        <h3><i data-lucide="lightbulb" style="width: 24px; height: 24px;"></i> Key Features</h3>
+                        <ul class="feature-list">
+                            <li><strong>Secure Storage:</strong> All API keys are encrypted end-to-end before storage
+                            </li>
+                            <li><strong>Easy Integration:</strong> Simple Python API that works with any project</li>
+                            <li><strong>No Hardcoding:</strong> Keep your secrets out of version control forever</li>
+                            <li><strong>Cross-Platform:</strong> Works on Linux, macOS, and Windows</li>
+                            <li><strong>MIT Licensed:</strong> Free and open source for all your projects</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Node.js Tab Content -->
+            <div id="nodejs-content" class="tab-content">
+                <div class="usage-grid">
+                    <div class="usage-card">
+                        <h3><span class="step-number">1</span> Install the Package</h3>
+                        <p>Install globally via npm:</p>
+                        <div class="code-block">
+                            <button class="copy-btn" onclick="copyCode(this)">
+                                <i data-lucide="copy" style="width: 14px; height: 14px;"></i>
+                                Copy
+                            </button>
+                            <pre>npm install anarchkey-client -g</pre>
+                        </div>
+                        <p style="margin-top: 1rem; opacity: 0.8; font-size: 0.9rem;">
+                            <i data-lucide="info" style="width: 14px; height: 14px; display: inline;"></i>
+                            Or install locally: <code>npm install anarchkey-client</code>
+                        </p>
+                    </div>
+
+                    <div class="usage-card">
+                        <h3><span class="step-number">2</span> Create Account</h3>
+                        <p>Sign up for a free account:</p>
+                        <div class="highlight-box">
+                            <h4><i data-lucide="external-link" style="width: 18px; height: 18px;"></i> Registration</h4>
+                            <p>Visit <a href="https://anarchkey.pythonanywhere.com/" target="_blank"
+                                    style="color: var(--primary-red); font-weight: 600;">anarchkey.pythonanywhere.com</a>
+                                to create your account and get your credentials.</p>
+                        </div>
+                    </div>
+
+                    <div class="usage-card">
+                        <h3><span class="step-number">3</span> Initialize via CLI</h3>
+                        <p>Set up your local authentication token:</p>
+                        <div class="code-block">
+                            <button class="copy-btn" onclick="copyCode(this)">
+                                <i data-lucide="copy" style="width: 14px; height: 14px;"></i>
+                                Copy
+                            </button>
+                            <pre>anarchkey init --username YourName --password YourPassword</pre>
+                        </div>
+                        <div style="margin-top: 1rem;">
+                            <p style="opacity: 0.8; font-size: 0.9rem; margin-bottom: 0.5rem;"><strong>Optional
+                                    flags:</strong></p>
+                            <div class="code-block">
+                                <pre><span class="comment"># Custom base URL</span>
+--base-url https://anarchkey.pythonanywhere.com/
+
+<span class="comment"># Custom output file path</span>
+--out-file ~/.anarchkey</pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="usage-card">
+                        <h3><span class="step-number">4</span> Use in Your Code</h3>
+                        <p>Retrieve your API keys securely:</p>
+                        <div class="code-block">
+                            <button class="copy-btn" onclick="copyCode(this)">
+                                <i data-lucide="copy" style="width: 14px; height: 14px;"></i>
+                                Copy
+                            </button>
+                            <pre><span class="keyword">const</span> AnarchKeyClient = <span class="function">require</span>(<span class="string">'anarchkey-client'</span>);
+
+(<span class="keyword">async</span> () => {
+  <span class="comment">// Initialize the client</span>
+  <span class="keyword">const</span> client = <span class="keyword">new</span> <span class="function">AnarchKeyClient</span>({
+    apiKey: <span class="string">'myapikey'</span>,
+    username: <span class="string">'me'</span>
+  });
+
+  <span class="comment">// Retrieve an API key</span>
+  <span class="keyword">const</span> result = <span class="keyword">await</span> client.<span class="function">getApiKey</span>(<span class="string">'myproject'</span>);
+
+  <span class="keyword">if</span> (result <span class="keyword">instanceof</span> Error) {
+    console.<span class="function">error</span>(result.message);
+  } <span class="keyword">else</span> {
+    console.<span class="function">log</span>(<span class="string">'result:'</span>, result);
+  }
+})();</pre>
+                        </div>
+                    </div>
+
+                    <div class="usage-card full-width-card">
+                        <h3><i data-lucide="code" style="width: 24px; height: 24px;"></i> Programmatic Initialization
+                        </h3>
+                        <p>You can also initialize programmatically (equivalent to CLI init):</p>
+                        <div class="code-block">
+                            <button class="copy-btn" onclick="copyCode(this)">
+                                <i data-lucide="copy" style="width: 14px; height: 14px;"></i>
+                                Copy
+                            </button>
+                            <pre><span class="keyword">const</span> AnarchKeyClient = <span class="function">require</span>(<span class="string">'anarchkey-client'</span>);
+
+(<span class="keyword">async</span> () => {
+  <span class="keyword">try</span> {
+    <span class="comment">// Initialize and get token</span>
+    <span class="keyword">const</span> token = <span class="keyword">await</span> AnarchKeyClient.<span class="function">doInit</span>({
+      username: <span class="string">'me'</span>,
+      password: <span class="string">'secret'</span>
+    });
+    console.<span class="function">log</span>(<span class="string">'init token:'</span>, token);
+  } <span class="keyword">catch</span> (e) {
+    console.<span class="function">error</span>(<span class="string">'init failed:'</span>, e);
+  }
+})();</pre>
+                        </div>
+                    </div>
+
+                    <div class="usage-card full-width-card">
+                        <h3><i data-lucide="lightbulb" style="width: 24px; height: 24px;"></i> Key Features</h3>
+                        <ul class="feature-list">
+                            <li><strong>CLI & Programmatic:</strong> Use via command line or integrate directly into
+                                your Node.js apps</li>
+                            <li><strong>Secure Permissions:</strong> Token file created with 0o600 permissions
+                                (user-only access)</li>
+                            <li><strong>Promise-Based:</strong> Modern async/await API for clean, readable code</li>
+                            <li><strong>Error Handling:</strong> Comprehensive error handling with detailed messages
+                            </li>
+                            <li><strong>Cross-Platform:</strong> Works seamlessly on Linux, macOS, and Windows</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section class="cta">
         <div class="container">
             <div class="cta-content">
@@ -93,11 +559,56 @@
         <div class="container">
             <p>© 2025 AnarchKey | All Rights Reserved | No API keys were harmed in the making of this product</p>
             <br>
-            <p>Powered by <a href="https://protobase.pythonanywhere.com" target="_blank" style="color: #ff4b2b; text-decoration: none;">ProtoBase</a> – because reinventing authentication is for people with too much free time.</p>
-
+            <p>Powered by <a href="https://protobase.pythonanywhere.com" target="_blank"
+                    style="color: #ff4b2b; text-decoration: none;">ProtoBase</a> – because reinventing authentication is
+                for people with too much free time.</p>
         </div>
     </footer>
 
     <script src="../static/index.js"></script>
+    <script>
+        // Tab switching functionality
+        function switchTab(tab) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Show selected tab content
+            document.getElementById(tab + '-content').classList.add('active');
+            document.getElementById(tab + '-tab').classList.add('active');
+
+            // Reinitialize lucide icons
+            lucide.createIcons();
+        }
+
+        // Copy code functionality
+        function copyCode(button) {
+            const codeBlock = button.parentElement;
+            const code = codeBlock.querySelector('pre').textContent;
+
+            navigator.clipboard.writeText(code).then(() => {
+                const originalHTML = button.innerHTML;
+                button.innerHTML = '<i data-lucide="check" style="width: 14px; height: 14px;"></i> Copied!';
+                lucide.createIcons();
+
+                setTimeout(() => {
+                    button.innerHTML = originalHTML;
+                    lucide.createIcons();
+                }, 2000);
+            });
+        }
+
+        // Initialize lucide icons when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+        });
+    </script>
 </body>
+
 </html>
